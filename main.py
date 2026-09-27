@@ -6,8 +6,8 @@ from alpaca.trading.enums import OrderSide, TimeInForce
 
 app = FastAPI()
 
-API_KEY = os.getenv("APCA_API_KEY_ID")
-API_SECRET = os.getenv("APCA_API_SECRET_KEY")
+API_KEY = "PKUQFLJNKYWFTJTKVVRZOVE56J"
+API_SECRET = "JBMK6uo7MY1pC2PoxHPdAtctjHFJLoFQ3FgMxf2Xhm54"
 
 trading_client = TradingClient(API_KEY, API_SECRET, paper=True)
 
