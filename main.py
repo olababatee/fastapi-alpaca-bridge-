@@ -3,8 +3,8 @@ from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
-API_KEY = PK7CPILVBNLWPPWGOBDTP6YPRL
-API_SECRET = FZhcbFPWc73BJAxoYEPUjE8wh5QSfsLFVjkEmn7CsrAX
+API_KEY = "PK7CPILVBNLWPPWGOBDTP6YPRL"
+API_SECRET = "FZhcbFPWc73BJAxoYEPUjE8wh5QSfsLFVjkEmn7CsrAX"
 BASE_URL = "https://paper-api.alpaca.markets"
 
 @app.get("/")
