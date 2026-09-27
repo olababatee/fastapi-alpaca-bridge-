@@ -23,3 +23,25 @@ def get_account():
         "status_code": response.status_code,
         "alpaca_response": response.json()
     }
+@app.post("/trade")
+def place_trade(symbol: str, qty: int, side: str):
+    headers = {
+        "APCA-API-KEY-ID": API_KEY,
+        "APCA-API-SECRET-KEY": API_SECRET,
+        "Content-Type": "application/json"
+    }
+    
+    order_data = {
+        "symbol": symbol,
+        "qty": qty,
+        "side": side,  # "buy" or "sell"
+        "type": "market",
+        "time_in_force": "day"
+    }
+    
+    response = requests.post(f"{BASE_URL}/v2/orders", json=order_data, headers=headers)
+    
+    return {
+        "status_code": response.status_code,
+        "alpaca_response": response.json()
+    }
