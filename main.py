@@ -1,11 +1,20 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
 import requests
-from fastapi import FastAPI, HTTPException
+import os
 
 app = FastAPI()
 
-API_KEY = "PK7CPILVBNLWPPWGOBDTP6YPRL"
-API_SECRET = "FZhcbFPWc73BJAxoYEPUjE8wh5QSfsLFVjkEmn7CsrAX"
+API_KEY = os.getenv("API_KEY")
+API_SECRET = os.getenv("API_SECRET")
 BASE_URL = "https://paper-api.alpaca.markets"
+
+class TradeRequest(BaseModel):
+    symbol: str
+    qty: int
+    side: str
+    type: str = "market"
+    time_in_force: str = "day"
 
 @app.get("/")
 def read_root():
@@ -18,13 +27,13 @@ def get_account():
         "APCA-API-SECRET-KEY": API_SECRET
     }
     response = requests.get(f"{BASE_URL}/v2/account", headers=headers)
-    
     return {
         "status_code": response.status_code,
         "alpaca_response": response.json()
     }
+
 @app.post("/trade")
-def place_trade(symbol: str, qty: int, side: str):
+def place_trade(order: TradeRequest):
     headers = {
         "APCA-API-KEY-ID": API_KEY,
         "APCA-API-SECRET-KEY": API_SECRET,
@@ -32,14 +41,18 @@ def place_trade(symbol: str, qty: int, side: str):
     }
     
     order_data = {
-        "symbol": symbol,
-        "qty": qty,
-        "side": side,  # "buy" or "sell"
-        "type": "market",
-        "time_in_force": "day"
+        "symbol": order.symbol.upper(),
+        "qty": order.qty,
+        "side": order.side.lower(),
+        "type": order.type,
+        "time_in_force": order.time_in_force
     }
     
-    response = requests.post(f"{BASE_URL}/v2/orders", json=order_data, headers=headers)
+    response = requests.post(
+        f"{BASE_URL}/v2/orders", 
+        json=order_data, 
+        headers=headers
+    )
     
     return {
         "status_code": response.status_code,
