@@ -1,15 +1,11 @@
-import os
+import requests
 from fastapi import FastAPI, HTTPException
-from alpaca.trading.client import TradingClient
-from alpaca.trading.requests import MarketOrderRequest
-from alpaca.trading.enums import OrderSide, TimeInForce
 
 app = FastAPI()
 
 API_KEY = "PKUQFLJNKYWFTJTKVVRZOVE56J"
-API_SECRET = "JBMK6uo7MY1pC2PoxHPdAtctjHFJLoFQ3FgMxf2Xhm54"
-
-trading_client = TradingClient(API_KEY, API_SECRET, paper=True)
+API_SECRET = "JBMK6uo7WY1pC2PoxHfDatctJfHJLoQ3FgVxf2XhM54"
+BASE_URL = "https://paper-api.alpaca.markets"
 
 @app.get("/")
 def read_root():
@@ -17,33 +13,13 @@ def read_root():
 
 @app.get("/account")
 def get_account():
-    try:
-        account = trading_client.get_account()
-        return {
-            "status": account.status,
-            "cash": account.cash,
-            "portfolio_value": account.portfolio_value,
-            "buying_power": account.buying_power
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/trade/buy")
-def buy_stock(symbol: str, qty: float):
-    try:
-        order_data = MarketOrderRequest(
-            symbol=symbol.upper(),
-            qty=qty,
-            side=OrderSide.BUY,
-            time_in_force=TimeInForce.DAY
-        )
-        order = trading_client.submit_order(order_data=order_data)
-        return {
-            "status": "success",
-            "order_id": str(order.id),
-            "symbol": order.symbol,
-            "qty": order.qty,
-            "side": order.side
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    headers = {
+        "APCA-API-KEY-ID": API_KEY,
+        "APCA-API-SECRET-KEY": API_SECRET
+    }
+    response = requests.get(f"{BASE_URL}/v2/account", headers=headers)
+    
+    return {
+        "status_code": response.status_code,
+        "alpaca_response": response.json()
+    }
