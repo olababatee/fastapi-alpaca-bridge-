@@ -6,7 +6,7 @@ import os
 app = FastAPI()
 API_KEY = os.getenv("APCA_API_KEY_ID")
 API_SECRET = os.getenv("APCA_API_SECRET_KEY")
-print(f"DEBUG KEY LOADED: {API_KEY[:5] if API_KEY else 'NONE'}")
+print(f"DEBUG KEY LOADED: {API_KEY[:5] if API_KEY else 'NONE'} | SECRET LOADED: {API_SECRET[:5] if API_SECRET else 'NONE'}")
 
 BASE_URL = "https://paper-api.alpaca.markets"
 
