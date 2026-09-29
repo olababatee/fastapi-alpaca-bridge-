@@ -4,9 +4,9 @@ import requests
 import os
 
 app = FastAPI()
+API_KEY = os.getenv("APCA-API_KEY-ID")
+API_SECRET = os.getenv("APCA-API_SECRET-KEY")
 
-API_KEY = os.getenv("API_KEY")
-API_SECRET = os.getenv("API_SECRET")
 BASE_URL = "https://paper-api.alpaca.markets"
 
 class TradeRequest(BaseModel):
